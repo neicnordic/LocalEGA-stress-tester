@@ -1,0 +1,10 @@
+localega:
+  token:
+  # Username to identify the user in CentralEGA
+  user: "dummy"
+  # User secret private RSA key.
+  user_key: "/home/stenegru/csc/dev/EGA-LocalEGA/tests/_common/dummy.sec"
+  # Private key file to encrypt file.
+  encrypt_key_private: "/config/key.1.sec"
+  # Private key password.
+  encrypt_key_pass:
