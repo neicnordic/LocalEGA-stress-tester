@@ -58,11 +58,10 @@ class InboxBehavior(TaskSet):
     def setup(self):
         """Test if the inbox is reachable."""
         yaml = YAML(typ='safe')
-        with open('/home/stenegru/csc/dev/LocalEGA-stress-tester/stress_tests/config.yaml', 'r') as stream:
-            config = yaml.load(stream)
-        LOG.info(config['localega'])
-        key_pk = os.path.expanduser(config['localega']['user_key'])
-        open_ssh_connection(self.locust.host, 'dummy', key_pk)
+        with open('../stress_tests/config.yaml', 'r') as stream:
+            self.config = yaml.load(stream)
+        self.key_pk = os.path.expanduser(self.config['localega']['user_key'])
+        open_ssh_connection(self.locust.host, 'dummy', self.key_pk)
 
     @task
     def upload(self):
@@ -70,12 +69,15 @@ class InboxBehavior(TaskSet):
 
         The only endpoint that has some sort of caching.
         """
-        LOG.info(dir(self.locust))
-        pass
+        file = '../stress_tests/config.yaml'
+        sftp_upload(self.locust.host, file, 'dummy', self.key_pk)
 
 
 class InboxTest(Locust):
-    """Test LocalEGA Inbox."""
+    """Test LocalEGA Inbox.
+
+    For this kind of test we need a normal locust.
+    """
 
     task_set = InboxBehavior
     min_wait = 5000

@@ -8,11 +8,12 @@ Required: **Python 3.6+**
 
 For installation run the following:
 ```
-git clone
-cd ega-data-api-tests
+git clone https://github.com/NBISweden/LocalEGA-stress-tester
+cd LocalEGA-stress-tester
 pip install -r requirements.txt
 # see if locust is installed
 locust -h
+cd stress_tests
 ```
 
 #### Peforming the scenarios

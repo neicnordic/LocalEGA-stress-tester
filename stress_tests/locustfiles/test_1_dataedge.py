@@ -1,14 +1,22 @@
+"""Base Test Design for DataEdge Scenario 1 and Scenario 5.
+
+For this test we are aiming to download an unecrypted file.
+The assumption is that the token contains only one file with the correct permissions,
+and we can retrieve the ``file_id`` from the token.
+Scenario 1: Download an unencrypted file given a valid token.
+Scenario 5: Download an unencrypted large file given a valid token.
+"""
+
 import sys
-from os import environ
+from ruamel.yaml import YAML
 from locust import HttpLocust, TaskSet, task
 import logging
 
 # Keeping it simple with the logging formatting
-
 formatting = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(module)s | %(funcName)s: %(message)s'
 logging.basicConfig(level=logging.INFO, format=formatting)
 
-LOG = logging.getLogger("test_dataedge")
+LOG = logging.getLogger("dataedge_scenario_1")
 
 
 class APIBehavior(TaskSet):
@@ -17,21 +25,15 @@ class APIBehavior(TaskSet):
     def setup(self):
         """Test if the server is reachable."""
         with self.client.get("/", catch_response=True) as response:
-            # TO DO Double check if this is the right way to do this
             if response != 200:
                 LOG.error("Data Edge API is not reachable")
                 sys.exit(1)
-        if "TOKEN" not in environ:
+        yaml = YAML(typ='safe')
+        with open('../stress_tests/config.yaml', 'r') as stream:
+            config = yaml.load(stream)
+        if "token" not in config['localega'] and config['localega']['token'] is not None:
             LOG.error("Missing Token")
             sys.exit(1)
-
-    @task
-    def get_token(self):
-        """Test the info endpoint.
-
-        The only endpoint that has some sort of caching.
-        """
-        self.client.get("/")
 
     @task
     def get_query(self):
@@ -44,7 +46,10 @@ class APIBehavior(TaskSet):
 
 
 class APITest(HttpLocust):
-    """Test DataEdge API."""
+    """Test 1 DataEdge API.
+
+    We need an HTTP Locust given the nature of the DataEdge API.
+    """
 
     task_set = APIBehavior
     min_wait = 5000
