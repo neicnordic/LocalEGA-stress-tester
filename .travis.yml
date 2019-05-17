@@ -1,0 +1,33 @@
+sudo: required
+dist: xenial
+language: python
+
+python: 3.6
+install: true
+
+git:
+  depth: false
+  quiet: true
+
+stages:
+  - name: tests
+    if: type IN (push, pull_request)
+
+
+jobs:
+  include:
+    - stage: tests
+      name: "Code Style Check"
+      python: 3.6
+      before_script:
+        - pip install tox-travis
+      script: tox -e flake8
+    - stage: tests
+      name: "Python Code Security Tests"
+      python: 3.6
+      before_script:
+        - pip install tox-travis
+      script: tox -e bandit
+
+notifications:
+  email: false
