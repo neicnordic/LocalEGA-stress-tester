@@ -1,6 +1,6 @@
 """Base Test Design for LocalEGA Inbox Scenario 2.
 
-For this test we are aiming to upload an encrypted file.
+For this test we are aiming to upload and rename an encrypted file.
 Scenario 2: Upload an encrypted file, reconnect and rename file.
 """
 

@@ -1,7 +1,7 @@
-"""Base Test Design for LocalEGA Inbox Scenario 3.
+"""Base Test Design for LocalEGA Inbox Scenario 4.
 
-For this test we are aiming to upload and rename an encrypted file.
-Scenario 3: Upload an encrypted file and rename file without reconnecting.
+For this test we are aiming to upload, rename and remove an encrypted file.
+Scenario 4: Upload an encrypted file, rename and remove file without reconnecting.
 """
 
 import os
@@ -34,7 +34,7 @@ def open_ssh_connection(hostname, user, key_path, key_pass=None, port=2222):
     return client
 
 
-def sftp_upload_rename(hostname, user, remote_path, new_name, key_path, key_pass=None, port=2222):
+def sftp_upload_rename_remove(hostname, user, remote_path, new_name, key_path, key_pass=None, port=2222):
     """SFTP Client file upload."""
     try:
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
@@ -45,6 +45,7 @@ def sftp_upload_rename(hostname, user, remote_path, new_name, key_path, key_pass
         filename, _ = os.path.splitext(remote_path)
         sftp.put(remote_path, f'{filename}'.c4ga)
         sftp.rename(f'{filename}'.c4ga, new_name)
+        sftp.remove(new_name)
         LOG.info(f'file renamed to {new_name}')
     except Exception as e:
         LOG.error(f'Something went wrong {e}')
@@ -72,7 +73,7 @@ class InboxBehavior(TaskSet):
     @task
     def rename(self):
         """Test upload and rename file."""
-        sftp_upload_rename(self.locust.host, self.user, self.test_file, self.new_file, self.key_pk)
+        sftp_upload_rename_remove(self.locust.host, self.user, self.test_file, self.new_file, self.key_pk)
 
 
 class InboxTest(Locust):
