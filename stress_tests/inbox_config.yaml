@@ -1,0 +1,7 @@
+scenario1:
+  # Username to identify the user in CentralEGA
+  user: "dummy"
+  # Path to test file needs to be crypt4gh format
+  test_file: "~/tests/_common/dummy.sec"
+  # User secret private RSA key.
+  user_key: "~/tests/_common/dummy.sec"
