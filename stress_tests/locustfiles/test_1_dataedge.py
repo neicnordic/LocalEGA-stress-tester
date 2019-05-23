@@ -10,13 +10,9 @@ Scenario 5: Download an unencrypted large file given a valid token.
 import sys
 from ruamel.yaml import YAML
 from locust import HttpLocust, TaskSet, task
-import logging
+from common import log_format
 
-# Keeping it simple with the logging formatting
-formatting = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(module)s | %(funcName)s: %(message)s'
-logging.basicConfig(level=logging.INFO, format=formatting)
-
-LOG = logging.getLogger("dataedge_scenario_1")
+LOG = log_format('dataedge_scenario_1')
 
 
 class APIBehavior(TaskSet):
@@ -29,19 +25,20 @@ class APIBehavior(TaskSet):
                 LOG.error("Data Edge API is not reachable")
                 sys.exit(1)
         yaml = YAML(typ='safe')
-        with open('../stress_tests/config.yaml', 'r') as stream:
-            config = yaml.load(stream)
-        if "token" not in config['localega'] and config['localega']['token'] is not None:
+        with open('../stress_tests/dataedge_config.yaml', 'r') as stream:
+            self.config = yaml.load(stream)
+        if "token" not in self.config['scenario1'] and self.config['scenario1']['token'] is not None:
             LOG.error("Missing Token")
             sys.exit(1)
+        else:
+            self.token = self.config['scenario1']['token']
+            self.file_id = self.config['scenario1']['file_id']
 
     @task
     def get_query(self):
         """Test GET query endpoint."""
-        file_id = ''
-        token = ''
-        self.client.get(f"/files/{file_id}?destinationFormat=plain",
-                        headers={'Autorization': f'Bearer {token}'},
+        self.client.get(f"/files/{self.file_id}?destinationFormat=plain",
+                        headers={'Autorization': f'Bearer {self.token}'},
                         name='/files/[file_id]')
 
 

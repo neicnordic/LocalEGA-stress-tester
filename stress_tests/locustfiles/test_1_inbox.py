@@ -1,15 +1,18 @@
+"""Base Test Design for LocalEGA Inbox Scenario 1.
+
+For this test we are aiming to download an ecrypted file.
+The assumption is that the token contains only one file with the correct permissions,
+and we can retrieve the ``file_id`` from the token.
+Scenario 1: Download an encrypted file given a valid token.
+"""
+
 import os
 import paramiko
 from ruamel.yaml import YAML
 from locust import Locust, TaskSet, task
-import logging
+from common import log_format
 
-# Keeping it simple with the logging formatting
-
-formatting = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(module)s | %(funcName)s: %(message)s'
-logging.basicConfig(level=logging.INFO, format=formatting)
-
-LOG = logging.getLogger("test_inbox")
+LOG = log_format('test_inbox')
 
 
 def open_ssh_connection(hostname, user, key_path, key_pass=None, port=2222):
@@ -19,7 +22,7 @@ def open_ssh_connection(hostname, user, key_path, key_pass=None, port=2222):
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(hostname, allow_agent=False, look_for_keys=False, port=port, timeout=0.3, username=user, pkey=k)
-        LOG.info(f'ssh connected to {hostname}:{port} with {user} | PASS |')
+        LOG.info(f'ssh connected to {hostname}:{port} with {user}')
     except paramiko.BadHostKeyException as e:
         LOG.error(f'Something went wrong {e}')
         raise Exception('BadHostKeyException on ' + hostname)
@@ -42,8 +45,8 @@ def sftp_upload(hostname, user, file_path, key_path, key_pass=None, port=2222):
         LOG.debug(f'sftp connected to {hostname}:{port} with {user}')
         sftp = paramiko.SFTPClient.from_transport(transport)
         filename, _ = os.path.splitext(file_path)
-        sftp.put(file_path, f'{filename}.c4ga')
-        LOG.info(f'file uploaded {filename}.c4ga | PASS |')
+        sftp.put(file_path, f'{filename}')
+        LOG.info(f'file uploaded {filename}')
     except Exception as e:
         LOG.error(f'Something went wrong {e}')
         raise e
@@ -58,10 +61,12 @@ class InboxBehavior(TaskSet):
     def setup(self):
         """Test if the inbox is reachable."""
         yaml = YAML(typ='safe')
-        with open('../stress_tests/config.yaml', 'r') as stream:
+        with open('../stress_tests/inbox_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
-        self.key_pk = os.path.expanduser(self.config['localega']['user_key'])
-        open_ssh_connection(self.locust.host, 'dummy', self.key_pk)
+        self.key_pk = os.path.expanduser(self.config['scenario1']['user_key'])
+        self.user = self.config['scenario1']['user']
+        self.test_file = os.path.expanduser(self.config['scenario1']['file'])
+        open_ssh_connection(self.locust.host, self.user, self.key_pk)
 
     @task
     def upload(self):
@@ -69,8 +74,7 @@ class InboxBehavior(TaskSet):
 
         The only endpoint that has some sort of caching.
         """
-        file = '../stress_tests/config.yaml'
-        sftp_upload(self.locust.host, file, 'dummy', self.key_pk)
+        sftp_upload(self.locust.host, self.test_file, self.user, self.key_pk)
 
 
 class InboxTest(Locust):
