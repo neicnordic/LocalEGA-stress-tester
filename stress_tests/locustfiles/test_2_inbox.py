@@ -1,9 +1,7 @@
-"""Base Test Design for LocalEGA Inbox Scenario 1.
+"""Base Test Design for LocalEGA Inbox Scenario 2.
 
-For this test we are aiming to download an ecrypted file.
-The assumption is that the token contains only one file with the correct permissions,
-and we can retrieve the ``file_id`` from the token.
-Scenario 1: Download an encrypted file given a valid token.
+For this test we are aiming to upload an encrypted file.
+Scenario 2: Upload an encrypted file, reconnect and rename file.
 """
 
 import os

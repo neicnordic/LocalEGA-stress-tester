@@ -1,6 +1,6 @@
 """Base Test Design for DataEdge Scenario 1 and Scenario 5.
 
-For this test we are aiming to download an ecrypted file.
+For this test we are aiming to download an encrypted file.
 The assumption is that the token contains only one file with the correct permissions,
 and we can retrieve the ``file_id`` from the token.
 Scenario 1: Download an encrypted file given a valid token.
