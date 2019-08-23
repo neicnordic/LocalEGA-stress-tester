@@ -1,18 +1,28 @@
+settings:
+  # Username to identify the user in CentralEGA
+  user: "dummy"
+  # User secret private RSA key.
+  user_key: "~/tests/_common/dummy.sec"
 scenario1:
-  # Username to identify the user in CentralEGA
-  user: "dummy"
   # Path to test file needs to be crypt4gh format
-  test_file: "~/tests/_common/dummy.sec"
-  # User secret private RSA key.
-  user_key: "~/tests/_common/dummy.sec"
+  test_file: "test_file.txt"
 scenario2:
-  # Username to identify the user in CentralEGA
-  user: "dummy"
   # Path to test file needs to be crypt4gh format
-  test_file: "~/tests/_common/dummy.sec"
-  # User secret private RSA key.
-  user_key: "~/tests/_common/dummy.sec"
+  test_file: "test_file.txt"
   # New file name on remote
   new_file: "new_name.c4ga"
-
-# We can reuse the same settings as in scenario2
+scenario3:
+  # Path to test file needs to be crypt4gh format
+  test_file: "test_file.txt"
+  # New file name on remote
+  new_file: "new_name.c4ga"
+scenario4:
+  # Path to test file needs to be crypt4gh format
+  test_file: "test_file.txt"
+  # New file name on remote
+  new_file: "new_name.c4ga"
+scenario5:
+  # Path to test file needs to be crypt4gh format
+  test_file: "test_file.txt"
+  # New file name on remote
+  new_file: "new_name.c4ga"

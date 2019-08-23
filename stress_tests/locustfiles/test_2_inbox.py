@@ -19,7 +19,8 @@ def open_ssh_connection(hostname, user, key_path, key_pass=None, port=2222):
         client = paramiko.SSHClient()
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(hostname, allow_agent=False, look_for_keys=False, port=port, timeout=0.3, username=user, pkey=k)
+        client.connect(hostname, allow_agent=False, look_for_keys=False,
+                       port=port, timeout=0.3, username=user, pkey=k)
         LOG.info(f'ssh connected to {hostname}:{port} with {user}')
     except paramiko.BadHostKeyException as e:
         LOG.error(f'Something went wrong {e}')
@@ -79,10 +80,10 @@ class InboxBehavior(TaskSet):
         yaml = YAML(typ='safe')
         with open('../stress_tests/inbox_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
-        self.key_pk = os.path.expanduser(self.config['scenario2']['user_key'])
-        self.user = self.config['scenario2']['user']
-        self.test_file = os.path.expanduser(self.config['scenario2']['file'])
-        self.new_file = os.path.expanduser(self.config['scenario2']['rename_file'])
+        self.key_pk = os.path.expanduser(self.config['settings']['user_key'])
+        self.user = self.config['settings']['user']
+        self.test_file = os.path.expanduser(self.config['scenario2']['test_file'])
+        self.new_file = os.path.expanduser(self.config['scenario2']['new_file'])
         open_ssh_connection(self.locust.host, self.user, self.key_pk)
 
     @task
@@ -93,7 +94,8 @@ class InboxBehavior(TaskSet):
     @task
     def rename(self):
         """Test rename file."""
-        sftp_rename(self.locust.host, self.user, self.test_file, self.new_file, self.key_pk)
+        sftp_rename(self.locust.host, self.user, self.test_file,
+                    self.new_file, self.key_pk)
 
 
 class InboxTest(Locust):

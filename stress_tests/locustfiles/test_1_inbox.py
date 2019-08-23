@@ -19,7 +19,8 @@ def open_ssh_connection(hostname, user, key_path, key_pass=None, port=2222):
         client = paramiko.SSHClient()
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(hostname, allow_agent=False, look_for_keys=False, port=port, timeout=0.3, username=user, pkey=k)
+        client.connect(hostname, allow_agent=False, look_for_keys=False,
+                       port=port, timeout=0.3, username=user, pkey=k)
         LOG.info(f'ssh connected to {hostname}:{port} with {user}')
     except paramiko.BadHostKeyException as e:
         LOG.error(f'Something went wrong {e}')
@@ -61,9 +62,9 @@ class InboxBehavior(TaskSet):
         yaml = YAML(typ='safe')
         with open('../stress_tests/inbox_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
-        self.key_pk = os.path.expanduser(self.config['scenario1']['user_key'])
-        self.user = self.config['scenario1']['user']
-        self.test_file = os.path.expanduser(self.config['scenario1']['file'])
+        self.key_pk = os.path.expanduser(self.config['settings']['user_key'])
+        self.user = self.config['settings']['user']
+        self.test_file = os.path.expanduser(self.config['scenario1']['test_file'])
         open_ssh_connection(self.locust.host, self.user, self.key_pk)
 
     @task
