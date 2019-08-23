@@ -1,10 +1,9 @@
-"""Base Test Design for DataEdge Scenario 1 and Scenario 5.
+"""Base Test Design for DataEdge Scenario 1.
 
 For this test we are aiming to download an unecrypted file.
 The assumption is that the token contains only one file with the correct permissions,
 and we can retrieve the ``file_id`` from the token.
 Scenario 1: Download an unencrypted file given a valid token.
-Scenario 5: Download an unencrypted large file given a valid token.
 """
 
 import sys
@@ -33,13 +32,18 @@ class APIBehavior(TaskSet):
         else:
             self.token = self.config['scenario1']['token']
             self.file_id = self.config['scenario1']['file_id']
+            self.ca = self.config['settings']['tls_ca_root_file']
 
     @task
     def get_query(self):
         """Test GET query endpoint."""
-        self.client.get(f"/files/{self.file_id}?destinationFormat=plain",
-                        headers={'Autorization': f'Bearer {self.token}'},
-                        name='/files/[file_id]')
+        url = f"/files/{self.file_id}?destinationFormat=plain"
+        with self.client.get(url,
+                             headers={'Autorization': f'Bearer {self.token}'},
+                             verify=self.ca,
+                             name='/files/[file_id]') as response:
+            if response.status_code == 200:
+                response.success()
 
 
 class APITest(HttpLocust):
