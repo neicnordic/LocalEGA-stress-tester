@@ -7,7 +7,7 @@ Scenario 2: Upload an encrypted file, reconnect and rename file.
 import os
 import paramiko
 from ruamel.yaml import YAML
-from locust import Locust, TaskSet, task
+from locust import Locust, TaskSequence, seq_task
 from common import log_format
 
 LOG = log_format('test_inbox_2')
@@ -72,7 +72,7 @@ def sftp_rename(hostname, user, remote_path, new_name, key_path, key_pass=None, 
         transport.close()
 
 
-class InboxBehavior(TaskSet):
+class InboxBehavior(TaskSequence):
     """Test Tasks for LocalEGA Inbox."""
 
     def setup(self):
@@ -86,12 +86,12 @@ class InboxBehavior(TaskSet):
         self.new_file = os.path.expanduser(self.config['scenario2']['new_file'])
         open_ssh_connection(self.locust.host, self.user, self.key_pk)
 
-    @task
+    @seq_task(1)
     def upload(self):
         """Test one upload."""
         sftp_upload(self.locust.host, self.user, self.test_file, self.key_pk)
 
-    @task
+    @seq_task(2)
     def rename(self):
         """Test rename file."""
         sftp_rename(self.locust.host, self.user, self.test_file,

@@ -8,7 +8,7 @@ reconnect and remove a file.
 import os
 import paramiko
 from ruamel.yaml import YAML
-from locust import Locust, TaskSet, task
+from locust import Locust, TaskSequence, seq_task
 from common import log_format
 
 LOG = log_format('test_inbox_5')
@@ -91,7 +91,7 @@ def sftp_remove(hostname, user, remote_path, key_path, key_pass=None, port=2222)
         transport.close()
 
 
-class InboxBehavior(TaskSet):
+class InboxBehavior(TaskSequence):
     """Test Tasks for LocalEGA Inbox."""
 
     def setup(self):
@@ -106,18 +106,18 @@ class InboxBehavior(TaskSet):
         self.new_file = os.path.expanduser(self.config['scenario5']['new_file'])
         open_ssh_connection(self.locust.host, self.user, self.key_pk)
 
-    @task
+    @seq_task(1)
     def upload(self):
         """Test one upload."""
         sftp_upload(self.locust.host, self.user, self.test_file, self.key_pk)
 
-    @task
+    @seq_task(2)
     def rename(self):
         """Test rename file."""
         sftp_rename(self.locust.host, self.user,
                     self.test_file, self.new_file, self.key_pk)
 
-    @task
+    @seq_task(3)
     def remove(self):
         """Test remove file."""
         sftp_remove(self.locust.host, self.user, self.test_file, self.key_pk)
