@@ -1,0 +1,24 @@
+settings:
+  tls_ca_root_file: "/config/root.ca.crt"
+scenario1:
+  # token that has file 
+  token:
+  # File ID EGAF stableId
+  file_id: "EGAF000000001"
+  # if the scenario calls for downloading an encrypted file
+  encrypted:
+    # Encryption format can be aes, crypt4gh
+    format: "aes"
+    destination_key: ""
+    destination_iv: ""
+scenario5:
+  # token that has file 
+  token:
+  # File ID EGAF stableId
+  file_id: "EGAF000000001"
+  encrypted:
+    # Encryption format can be aes, crypt4gh
+    format: "aes"
+    destination_key: ""
+    destination_iv: ""
+
