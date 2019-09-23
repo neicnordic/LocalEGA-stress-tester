@@ -43,7 +43,7 @@ class APIBehavior(TaskSet):
         """Test GET query endpoint file 1."""
         url = f"/files/{self.file_1_id}?destinationFormat=plain"
         with self.client.get(url,
-                             headers={'Autorization': f'Bearer {self.token}'},
+                             headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
                              name='/files/[file_1_id]') as response:
             if response.status_code == 200:
@@ -54,7 +54,7 @@ class APIBehavior(TaskSet):
         """Test GET query endpoint file 2."""
         url = f"/files/{self.file_2_id}?destinationFormat=plain"
         with self.client.get(url,
-                             headers={'Autorization': f'Bearer {self.token}'},
+                             headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
                              name='/files/[file_2_id]') as response:
             if response.status_code == 200:
@@ -65,7 +65,7 @@ class APIBehavior(TaskSet):
         """Test GET query endpoint file 3."""
         url = f"/files/{self.file_3_id}?destinationFormat=plain"
         with self.client.get(url,
-                             headers={'Autorization': f'Bearer {self.token}'},
+                             headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
                              name='/files/[file_3_id]') as response:
             if response.status_code == 200:
@@ -76,7 +76,7 @@ class APIBehavior(TaskSet):
         """Test GET query endpoint file 4."""
         url = f"/files/{self.file_4_id}?destinationFormat=plain"
         with self.client.get(url,
-                             headers={'Autorization': f'Bearer {self.token}'},
+                             headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
                              name='/files/[file_4_id]') as response:
             if response.status_code == 200:
@@ -87,7 +87,7 @@ class APIBehavior(TaskSet):
         """Test GET query endpoint file 5."""
         url = f"/files/{self.file_5_id}?destinationFormat=plain"
         with self.client.get(url,
-                             headers={'Autorization': f'Bearer {self.token}'},
+                             headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
                              name='/files/[file_id]') as response:
             if response.status_code == 200:

@@ -42,7 +42,7 @@ class APIBehavior(TaskSet):
         """Test GET query endpoint."""
         url = f"/files/{self.file_1_id}?destinationFormat=plain"
         with self.client.get(url,
-                             headers={'Autorization': f'Bearer {self.token_1}'},
+                             headers={'Authorization': f'Bearer {self.token_1}'},
                              verify=self.ca,
                              name='/files/[file_1_id]') as response:
             if response.status_code == 200:
@@ -53,7 +53,7 @@ class APIBehavior(TaskSet):
         """Test GET query endpoint."""
         url = f"/files/{self.file_2_id}?destinationFormat=plain"
         with self.client.get(url,
-                             headers={'Autorization': f'Bearer {self.token_2}'},
+                             headers={'Authorization': f'Bearer {self.token_2}'},
                              verify=self.ca,
                              name='/files/[file_2_id]') as response:
             if response.status_code == 200:
