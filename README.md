@@ -16,6 +16,13 @@ locust -h
 cd stress_tests
 ```
 
+#### Scenario description
+
+The scenarios performanted by the scripts are described at:
+* [Data API Performance Testing](https://docs.google.com/document/d/1Q3nI9rbGrODzZpUSzsNtxOLhG4Gw9c6ujFxWJJYxCi0)
+* [Inbox Stress Testing](https://docs.google.com/document/d/1cHLTNfbYyFkc0oORwKLYtvTp1x9yPqYuiBwIG0igsJU)
+
+
 #### Peforming the scenarios
 
 Before performing the scenarios one needs to establish:
