@@ -9,7 +9,7 @@ import os
 import paramiko
 from ruamel.yaml import YAML
 from locust import Locust, TaskSequence, seq_task
-from common import log_format
+from common import log_format, CONFIG_PATH
 
 LOG = log_format('test_inbox_5')
 
@@ -97,7 +97,7 @@ class InboxBehavior(TaskSequence):
     def setup(self):
         """Test if the inbox is reachable."""
         yaml = YAML(typ='safe')
-        with open('../stress_tests/inbox_config.yaml', 'r') as stream:
+        with open(f'{CONFIG_PATH}/inbox_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
         # We can reuse the same settings as in scenario2
         self.key_pk = os.path.expanduser(self.config['settings']['user_key'])

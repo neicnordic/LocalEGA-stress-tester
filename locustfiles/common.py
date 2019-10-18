@@ -1,4 +1,7 @@
 import logging
+import os
+
+CONFIG_PATH = os.environ.get('CONFIG_DIR', '../../conf')
 
 
 # Keeping it simple with the logging formatting

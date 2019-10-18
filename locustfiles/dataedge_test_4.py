@@ -10,7 +10,7 @@ Scenario 4: Download an unencrypted file given a valid token.
 import sys
 from ruamel.yaml import YAML
 from locust import HttpLocust, TaskSet, task
-from common import log_format
+from common import log_format, CONFIG_PATH
 
 LOG = log_format('dataedge_scenario_4')
 
@@ -25,7 +25,7 @@ class APIBehavior(TaskSet):
                 LOG.error("Data Edge API is not reachable")
                 sys.exit(1)
         yaml = YAML(typ='safe')
-        with open('../stress_tests/dataedge_config.yaml', 'r') as stream:
+        with open(f'{CONFIG_PATH}/dataedge_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
         if "token_1" not in self.config['scenario4'] and self.config['scenario4']['token_1'] is not None:
             LOG.error("Missing Token")

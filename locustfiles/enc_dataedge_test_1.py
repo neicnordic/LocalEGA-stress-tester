@@ -9,7 +9,7 @@ Scenario 1: Download an encrypted file given a valid token.
 import sys
 from ruamel.yaml import YAML
 from locust import HttpLocust, TaskSet, task
-from common import log_format
+from common import log_format, CONFIG_PATH
 
 LOG = log_format('encrypted_dataedge_scenario_1')
 
@@ -24,7 +24,7 @@ class APIBehavior(TaskSet):
                 LOG.error("Data Edge API is not reachable")
                 sys.exit(1)
         yaml = YAML(typ='safe')
-        with open('../stress_tests/enc_dataedge_config.yaml', 'r') as stream:
+        with open(f'{CONFIG_PATH}/enc_dataedge_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
         if "token" not in self.config['scenario1'] and self.config['scenario1']['token'] is not None:
             LOG.error("Missing Token")
