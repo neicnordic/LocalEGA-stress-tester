@@ -1,6 +1,6 @@
 """Base Test Design for DataEdge Scenario 2.
 
-For this test we are aiming to download an unecrypted file.
+For this test we are aiming to download an unencrypted file.
 The assumption is that the token does not contains only the correct permissions,
 and we will receive a 403 from the Dataedge Service.
 Scenario 2: Download an unencrypted file given a token with no data access.
@@ -47,9 +47,10 @@ class APIBehavior(TaskSet):
 
 
 class APITest(HttpLocust):
-    """Test 2 DataEdge API.
+    """Test 2 Unencrypted file download via DataEdge API.
 
     We need an HTTP Locust given the nature of the DataEdge API.
+    For this test we expect 403.
     """
 
     task_set = APIBehavior

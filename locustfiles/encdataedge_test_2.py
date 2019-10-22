@@ -1,9 +1,9 @@
-"""Base Test Design for DataEdge Scenario 1.
+"""Base Test Design for DataEdge Scenario 2.
 
 For this test we are aiming to download an encrypted file.
-The assumption is that the token contains only one file with the correct permissions,
-and we can retrieve the ``file_id`` from the token.
-Scenario 1: Download an encrypted file given a valid token.
+The assumption is that the token does not contains only the correct permissions,
+and we will receive a 403 from the Dataedge Service.
+Scenario 2: Download an encrypted file given a token with no data access.
 """
 
 import sys
@@ -11,7 +11,7 @@ from ruamel.yaml import YAML
 from locust import HttpLocust, TaskSet, task
 from common import log_format, CONFIG_PATH
 
-LOG = log_format('encrypted_dataedge_scenario_5')
+LOG = log_format('dataedge_scenario_2')
 
 
 class APIBehavior(TaskSet):
@@ -24,17 +24,14 @@ class APIBehavior(TaskSet):
                 LOG.error("Data Edge API is not reachable")
                 sys.exit(1)
         yaml = YAML(typ='safe')
-        with open(f'{CONFIG_PATH}/enc_dataedge_config.yaml', 'r') as stream:
+        with open(f'{CONFIG_PATH}/encdataedge_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
-        if "token" not in self.config['scenario1'] and self.config['scenario1']['token'] is not None:
+        if "token" not in self.config['scenario2'] and self.config['scenario2']['token'] is not None:
             LOG.error("Missing Token")
             sys.exit(1)
         else:
-            self.token = self.config['scenario1']['token']
-            self.file_id = self.config['scenario1']['file_id']
-            self.format = self.config['scenario1']['encrypted']['format']
-            self.key = self.config['scenario1']['encrypted']['key']
-            self.iv = self.config['scenario1']['encrypted']['iv']
+            self.token = self.config['scenario2']['token']
+            self.file_id = self.config['scenario2']['file_id']
             self.ca = self.config['settings']['tls_ca_root_file']
 
     @task
@@ -45,17 +42,17 @@ class APIBehavior(TaskSet):
                              headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
                              name='/files/[file_id]') as response:
-            if response.status_code == 200:
+            if response.status_code == 403:
                 response.success()
 
 
 class APITest(HttpLocust):
-    """Test 5 Encrypted file download via DataEdge API.
+    """Test 2 Encrypted file download via DataEdge API.
 
     We need an HTTP Locust given the nature of the DataEdge API.
+    For this test we expect 403.
     """
 
     task_set = APIBehavior
-    # longer waiting times due to larger file
-    min_wait = 30000
-    max_wait = 90000
+    min_wait = 5000
+    max_wait = 30000

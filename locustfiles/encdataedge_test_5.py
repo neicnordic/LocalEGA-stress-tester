@@ -11,7 +11,7 @@ from ruamel.yaml import YAML
 from locust import HttpLocust, TaskSet, task
 from common import log_format, CONFIG_PATH
 
-LOG = log_format('encrypted_dataedge_scenario_1')
+LOG = log_format('encrypted_dataedge_scenario_5')
 
 
 class APIBehavior(TaskSet):
@@ -24,7 +24,7 @@ class APIBehavior(TaskSet):
                 LOG.error("Data Edge API is not reachable")
                 sys.exit(1)
         yaml = YAML(typ='safe')
-        with open(f'{CONFIG_PATH}/enc_dataedge_config.yaml', 'r') as stream:
+        with open(f'{CONFIG_PATH}/encdataedge_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
         if "token" not in self.config['scenario1'] and self.config['scenario1']['token'] is not None:
             LOG.error("Missing Token")
@@ -50,11 +50,12 @@ class APIBehavior(TaskSet):
 
 
 class APITest(HttpLocust):
-    """Test 1 Encrypted file download via DataEdge API.
+    """Test 5 Encrypted file download via DataEdge API.
 
     We need an HTTP Locust given the nature of the DataEdge API.
     """
 
     task_set = APIBehavior
-    min_wait = 5000
-    max_wait = 30000
+    # longer waiting times due to larger file
+    min_wait = 30000
+    max_wait = 90000

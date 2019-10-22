@@ -1,6 +1,6 @@
 """Base Test Design for DataEdge Scenario 5.
 
-For this test we are aiming to download a large encrypted file.
+For this test we are aiming to download a large unencrypted file.
 The assumption is that the token contains only one file with the correct permissions,
 and we can retrieve the ``file_id`` from the token.
 Scenario 5: Download an encrypted large file given a valid token.
@@ -47,7 +47,7 @@ class APIBehavior(TaskSet):
 
 
 class APITest(HttpLocust):
-    """Test 5 DataEdge API.
+    """Test 5 Unencrypted file download via DataEdge API.
 
     We need an HTTP Locust given the nature of the DataEdge API.
     """

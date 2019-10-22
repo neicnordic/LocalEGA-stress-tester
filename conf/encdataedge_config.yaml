@@ -11,6 +11,28 @@ scenario1:
     format: "aes"
     destination_key: ""
     destination_iv: ""
+scenario2:
+  # token that has file 
+  token:
+  # File ID EGAF stableId
+  file_id: "EGAF000000001"
+scenario3:
+  # token that has files
+  token:
+  # File ID EGAF stableId
+  file_1_id: "EGAF000000001"
+  file_2_id: "EGAF000000002"
+  file_3_id: "EGAF000000003"
+  file_4_id: "EGAF000000004"
+  file_5_id: "EGAF000000005"
+scenario4:
+  # token that has file_1
+  token_1:
+  # token that has file_1
+  token_2:
+  # File ID EGAF stableId
+  file_1_id: "EGAF000000001"
+  file_2_id: "EGAF000000002"
 scenario5:
   # token that has file 
   token:

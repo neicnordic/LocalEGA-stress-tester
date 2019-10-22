@@ -1,9 +1,9 @@
 """Base Test Design for DataEdge Scenario 3.
 
-For this test we are aiming to download multiple unencrypted files.
+For this test we are aiming to download multiple encrypted files.
 The assumption is that the token contains only one file with the correct permissions,
 and we can retrieve the ``file_{nb}_id`` from the token.
-Scenario 3: Download multiple unencrypted files given a valid token.
+Scenario 3: Download multiple encrypted files given a valid token.
 """
 
 import sys
@@ -24,7 +24,7 @@ class APIBehavior(TaskSet):
                 LOG.error("Data Edge API is not reachable")
                 sys.exit(1)
         yaml = YAML(typ='safe')
-        with open(f'{CONFIG_PATH}/dataedge_config.yaml', 'r') as stream:
+        with open(f'{CONFIG_PATH}/encdataedge_config.yaml', 'r') as stream:
             self.config = yaml.load(stream)
         if "token" not in self.config['scenario3'] and self.config['scenario3']['token'] is not None:
             LOG.error("Missing Token")
@@ -41,7 +41,7 @@ class APIBehavior(TaskSet):
     @task
     def get_query_1(self):
         """Test GET query endpoint file 1."""
-        url = f"/files/{self.file_1_id}?destinationFormat=plain"
+        url = f"/files/{self.file_1_id}?destinationFormat={self.format}&destinationKey={self.key}&destinationIV={self.iv}"
         with self.client.get(url,
                              headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
@@ -52,7 +52,7 @@ class APIBehavior(TaskSet):
     @task
     def get_query_2(self):
         """Test GET query endpoint file 2."""
-        url = f"/files/{self.file_2_id}?destinationFormat=plain"
+        url = f"/files/{self.file_2_id}?destinationFormat={self.format}&destinationKey={self.key}&destinationIV={self.iv}"
         with self.client.get(url,
                              headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
@@ -63,7 +63,7 @@ class APIBehavior(TaskSet):
     @task
     def get_query_3(self):
         """Test GET query endpoint file 3."""
-        url = f"/files/{self.file_3_id}?destinationFormat=plain"
+        url = f"/files/{self.file_3_id}?destinationFormat={self.format}&destinationKey={self.key}&destinationIV={self.iv}"
         with self.client.get(url,
                              headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
@@ -74,7 +74,7 @@ class APIBehavior(TaskSet):
     @task
     def get_query_4(self):
         """Test GET query endpoint file 4."""
-        url = f"/files/{self.file_4_id}?destinationFormat=plain"
+        url = f"/files/{self.file_4_id}?destinationFormat={self.format}&destinationKey={self.key}&destinationIV={self.iv}"
         with self.client.get(url,
                              headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
@@ -85,17 +85,17 @@ class APIBehavior(TaskSet):
     @task
     def get_query_5(self):
         """Test GET query endpoint file 5."""
-        url = f"/files/{self.file_5_id}?destinationFormat=plain"
+        url = f"/files/{self.file_5_id}?destinationFormat={self.format}&destinationKey={self.key}&destinationIV={self.iv}"
         with self.client.get(url,
                              headers={'Authorization': f'Bearer {self.token}'},
                              verify=self.ca,
-                             name='/files/[file_id]') as response:
+                             name='/files/[file_5_id]') as response:
             if response.status_code == 200:
                 response.success()
 
 
 class APITest(HttpLocust):
-    """Test 3 Unencrypted files download via DataEdge API.
+    """Test 3 Encrypted files download via DataEdge API.
 
     We need an HTTP Locust given the nature of the DataEdge API.
     """
