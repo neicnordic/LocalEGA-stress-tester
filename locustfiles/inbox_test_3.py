@@ -36,11 +36,12 @@ def open_ssh_connection(hostname, user, key_path, key_pass=None, port=2222):
 
 
 def sftp_upload_rename(hostname, user, remote_path, new_name, key_path, key_pass=None, port=2222):
-    """SFTP Client file upload."""
+    """SFTP Client file upload and rename."""
     try:
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
         transport = paramiko.Transport((hostname, port))
         transport.connect(username=user, pkey=k)
+        transport.set_keepalive(60)
         LOG.debug(f'sftp connected to {hostname}:{port} with {user}')
         sftp = paramiko.SFTPClient.from_transport(transport)
         filename, _ = os.path.splitext(remote_path)
@@ -72,7 +73,10 @@ class InboxBehavior(TaskSet):
 
     @task
     def rename(self):
-        """Test upload and rename file."""
+        """Test upload and rename file.
+
+        According to the scenario we are disconnect at the end.
+        """
         sftp_upload_rename(self.locust.host, self.user,
                            self.test_file, self.new_file, self.key_pk)
 

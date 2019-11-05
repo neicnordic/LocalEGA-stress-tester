@@ -42,6 +42,7 @@ def sftp_upload(hostname, user, file_path, key_path, key_pass=None, port=2222):
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
         transport = paramiko.Transport((hostname, port))
         transport.connect(username=user, pkey=k)
+        transport.set_keepalive(60)
         LOG.debug(f'sftp connected to {hostname}:{port} with {user}')
         sftp = paramiko.SFTPClient.from_transport(transport)
         filename, _ = os.path.splitext(file_path)
@@ -56,11 +57,12 @@ def sftp_upload(hostname, user, file_path, key_path, key_pass=None, port=2222):
 
 
 def sftp_rename(hostname, user, remote_path, new_name, key_path, key_pass=None, port=2222):
-    """SFTP Client file upload."""
+    """SFTP Client file rename."""
     try:
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
         transport = paramiko.Transport((hostname, port))
         transport.connect(username=user, pkey=k)
+        transport.set_keepalive(60)
         LOG.debug(f'sftp connected to {hostname}:{port} with {user}')
         sftp = paramiko.SFTPClient.from_transport(transport)
         sftp.rename(remote_path, new_name)
@@ -74,11 +76,12 @@ def sftp_rename(hostname, user, remote_path, new_name, key_path, key_pass=None, 
 
 
 def sftp_remove(hostname, user, remote_path, key_path, key_pass=None, port=2222):
-    """SFTP Client file upload."""
+    """SFTP Client file remove."""
     try:
         k = paramiko.RSAKey.from_private_key_file(key_path, password=key_pass)
         transport = paramiko.Transport((hostname, port))
         transport.connect(username=user, pkey=k)
+        transport.set_keepalive(60)
         LOG.debug(f'sftp connected to {hostname}:{port} with {user}')
         sftp = paramiko.SFTPClient.from_transport(transport)
         sftp.remove(remote_path)
